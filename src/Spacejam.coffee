@@ -3,7 +3,7 @@ expect = require("chai").expect
 _ = require("underscore")
 EventEmitter = require('events').EventEmitter
 Meteor = require("./Meteor")
-Phantomjs = require("./Phantomjs")
+PhantomjsRunner = require("./PhantomjsRunner")
 XunitFilePipe = require './XunitFilePipe'
 
 
@@ -65,7 +65,7 @@ class Spacejam extends EventEmitter
 
     try
       @meteor = new Meteor()
-      @phantomjs = new Phantomjs()
+      @phantomjs = new PhantomjsRunner()
     catch err
       console.trace err
       @emit "done", 1

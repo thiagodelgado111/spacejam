@@ -2,6 +2,6 @@ npmExports = {}
 
 npmExports.Spacejam = require("./Spacejam")
 npmExports.Meteor = require("./Meteor")
-npmExports.Phantomjs = require("./Phantomjs")
+npmExports.PhantomjsRunner = require("./PhantomjsRunner")
 
 module.exports = npmExports

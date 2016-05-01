@@ -54,4 +54,3 @@ class Phantomjs extends EventEmitter
 
 
 module.exports = Phantomjs
-
