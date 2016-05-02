@@ -61,6 +61,8 @@ class Spacejam extends EventEmitter
     expect(@meteor, "Meteor is already running").to.be.null
 
     @options = _.extend @defaultOptions(), options
+    if @options.coverage? && @options.coverage
+        @options['phantomjs-script'] = "phantomjs-test-in-console-with-coverage";
     log.debug @options
 
     try
