@@ -55,18 +55,16 @@ checkingStatus = setInterval ->
                         err: "Coverage package missing or not correclty launched"
                 else
                     Package['meteor']['Meteor'].sendCoverage (stats,err) ->
-                        console.log("tests are ok, save coverage", JSON.stringify(stats))
+                        console.log("tests are ok and some js on the client side have been covered. Report: ", JSON.stringify(stats))
                         if err
                              window.callPhantom
                                 err: "Failed to send client coverage"
                         else
-                            console.log("exportCoverage")
                             Package['meteor']['Meteor'].exportCoverage 'lcovonly', (err) ->
                                 if err
                                     window.callPhantom
                                         err: "Failed to save lcovonly coverage"
                                 else
-                                    console.log("success")
                                     window.callPhantom
                                         success: "true"
 , 500
