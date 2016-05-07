@@ -2,23 +2,22 @@
   "name": "spacejam",
   "version": "1.5.2",
   "dependencies": {
-    "chai": "3.5.0",
-    "cross-spawn": "^2.2.3",
-    "glob": "7.0.3",
-    "loglevel": "1.4.0",
-    "phantomjs": "2.1.7",
+    "chai": "1.9.2",
+    "glob": "4.0.6",
+    "loglevel": "1.1.0",
+    "phantomjs": "1.9.16",
     "psext": "0.0.4",
-    "rc": "1.1.6",
-    "semver": "5.1.0",
-    "underscore": "1.8.3"
+    "rc": "0.5.1",
+    "semver": "4.1.0",
+    "underscore": "1.7.0"
   },
   "devDependencies": {
-    "coffee-script": "1.10.0",
-    "mocha": "2.4.5",
-    "sinon-chai": "2.8.0",
-    "tmp": "0.0.28",
-    "xmldom": "0.1.22",
-    "xpath": "0.0.23"
+    "coffee-script": "1.8.0",
+    "mocha": "1.21.5",
+    "sinon-chai": "2.6.0",
+    "tmp": "0.0.25",
+    "xmldom": "0.1.19",
+    "xpath": "0.0.9"
   },
   "main": "lib/main.js",
   "scripts": {

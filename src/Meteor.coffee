@@ -105,7 +105,7 @@ class Meteor extends EventEmitter
     else
       delete env.MONGO_URL if env.MONGO_URL?
 
-    if @options.coverage? && @options.coverage
+    if @options?.coverage?
         env.COVERAGE = "1"
         env.COVERAGE_APP_FOLDER = path.join(cwd, './')
 
