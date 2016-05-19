@@ -63,7 +63,7 @@ class Spacejam extends EventEmitter
 
     @options = _.extend @defaultOptions(), options
     if @options.coverage? && @options.coverage
-        @options['phantomjs-script'] = "phantomjs-test-in-console-with-coverage";
+        @options['phantomjs-script'] = "phantomjs-test-in-console-with-coverage.js";
     log.debug @options
 
     try
