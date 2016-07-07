@@ -24,11 +24,15 @@ class MeteorMongodb extends EventEmitter
   findAllChildren: ->
     log.debug "MeteorMongodb.findAllChildren()", arguments
     if process.platform is 'win32'
-      @getChildProcessOnWindows(@meteorPid, (childsPid) ->
-        @meteorPid = childsPid[0].pid
-        log.debug "@meteorPid", @meteorPid
-        @getChildProcessOnWindows(@meteorPid, (childsPid) ->
-          @mongodChilds = childsPid
+      @getChildProcessOnWindows(@meteorPid, (childsPid, _this) ->
+        _this.getChildProcessOnWindows(childsPid[0].pid, (childsPid, _this) ->
+          _this.getChildProcessOnWindows(childsPid[0].pid, (childsPid, _this) ->
+            _this.meteorPid = childsPid[0].pid
+            log.debug "@meteorPid", _this.meteorPid
+            _this.getChildProcessOnWindows(childsPid[0].pid, (childsPid, _this) ->
+              _this.mongodChilds = childsPid
+            )
+          )
         )
       )
 
@@ -63,20 +67,21 @@ class MeteorMongodb extends EventEmitter
       resultList.push pid: parseInt(childPid)
 
     bat.stderr.on 'data', (data) ->
-      log.warn 'spacejam: Warning: Error enumerating mongod children:\n', data
+      log.warn 'spacejam: Warning: Error enumerating process children:\n', data
 
     bat.on 'exit', (code) =>
       if code != 0
-        return log.warn('spacejam: Warning: Enumerating mongod children returned with error code: ', code)
+        return log.warn('spacejam: Warning: Enumerating child process returned with error code: ', code)
       log.debug 'MongoDB children:\n', resultList
       if resultList.length == 0
-        log.warn 'spacejam: Warning: Couldn\'t find any mongod children:\n', err
+        log.warn 'spacejam: Warning: Couldn\'t find any child process :\n', err
       else if resultList.length > 1
-        onSuccess(resultList)
-        log.warn 'spacejam: Warning: Found more than one mongod child:\n', resultList
+        log.warn 'spacejam: Warning: Found more than one child process :\n', resultList
+        onSuccess(resultList, _this)
       else
-        onSuccess(resultList)
-        log.debug 'Found meteor mongod child with pid: ', resultList[0].pid
+        log.debug 'Found meteor child process with pid: ', resultList[0].pid
+        onSuccess(resultList, _this)
+
 
 
   kill: ->
