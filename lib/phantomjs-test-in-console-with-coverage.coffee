@@ -23,7 +23,7 @@ page.onError = (msg, trace) ->
   trace.forEach((item) ->
     console.log("    #{item.file}: #{item.line}")
   )
-  phantom.exit(0)
+  phantom.exit(6)
 
 page.onCallback = (data) ->
   ## Callback when sending and saving coverage
