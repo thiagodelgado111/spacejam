@@ -138,8 +138,6 @@ class Spacejam extends EventEmitter
       url += 'xunit'
       pipeClass = XunitFilePipe
       pipeClassOptions = pipeToFile: @options['xunit-out']
-    else
-      url += 'local'
 
     @phantomjs.on "exit", (code, signal)=>
       @phantomjs = null
