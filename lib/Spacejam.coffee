@@ -69,6 +69,7 @@ class Spacejam extends EventEmitter
             process.env.COVERAGE_OUT_COVERAGE = @options.coverage.indexOf('out_coverage') > -1 ? true : false;
             process.env.COVERAGE_OUT_LCOVONLY = @options.coverage.indexOf('out_lcovonly') > -1 ? true : false;
             process.env.COVERAGE_OUT_HTML = @options.coverage.indexOf('out_html') > -1 ? true : false;
+            process.env.COVERAGE_OUT_JSON = @options.coverage.indexOf('out_json_report') > -1 ? true : false;
             process.env.COVERAGE_OUT_TEAMCITY = @options.coverage.indexOf('out_teamcity') > -1 ? true : false;
             process.env.COVERAGE_OUT_JSON_SUMMARY = @options.coverage.indexOf('out_json_summary') > -1 ? true : false;
         else
