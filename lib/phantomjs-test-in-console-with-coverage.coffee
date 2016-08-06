@@ -55,30 +55,34 @@ checkingStatus = setInterval ->
                 importCoverageDump = env.COVERAGE_IN_COVERAGE == "true"
                 exportCoverageDump = env.COVERAGE_OUT_COVERAGE == "true"
                 exportLcovonly = env.COVERAGE_OUT_LCOVONLY == "true"
-                page.evaluate runCoverage, importCoverageDump, exportCoverageDump, exportLcovonly
+                exportHtml = env.COVERAGE_OUT_HTML == "true"
+                exportJson = env.COVERAGE_OUT_JSON == "true"
+                exportTeamcity = env.COVERAGE_OUT_TEAMCITY == "true"
+                exportJsonSummary = env.COVERAGE_OUT_JSON_SUMMARY == "true"
+                page.evaluate runCoverage, importCoverageDump, exportCoverageDump, exportLcovonly, exportHtml, exportJson, exportTeamcity, exportJsonSummary
             catch error
                 window.callPhantom
                     err: error
 , 500
 
-runCoverage = (importCoverageDump, exportCoverageDump, exportLcovonly) ->
+runCoverage = (importCoverageDump, exportCoverageDump, exportLcovonly, exportHtml, exportJson, exportTeamcity, exportJsonSummary) ->
     ## Define coverage services
     window.assertCoverageEnabled = (onSuccess) ->
-        if ! Package || ! Package['meteor'] || ! Package['meteor']['Meteor'] || ! Package['meteor']['Meteor'].sendCoverage || ! Package['meteor']['Meteor'].exportCoverage
+        if ! Package || ! Package['meteor'] || ! Package['meteor']['Meteor'] || ! Package['meteor']['Meteor'].sendCoverage || ! Package['meteor']['Meteor'].exportCoverage || ! Package['meteor']['Meteor'].importCoverage
             window.callPhantom
                 err: "Coverage package missing or not correclty launched"
         else
             onSuccess();
     window.saveClientSideCoverage = (onSuccess) ->
         Package['meteor']['Meteor'].sendCoverage (stats,err) ->
-            console.log("tests are ok and some js on the client side have been covered. Report: ", JSON.stringify(stats))
+            console.log("Tests are ok! Meteor-coverage is saving client side coverage to the server. Client js files saved ", JSON.stringify(stats))
             if err
                  window.callPhantom
                     err: "Failed to send client coverage"
             else
                 onSuccess();
 
-    window.exportLcovonly = (onSuccess) ->
+    window.exportLcovonlyReport = (onSuccess) ->
         Package['meteor']['Meteor'].exportCoverage 'lcovonly', (err) ->
             if err
                 window.callPhantom
@@ -94,6 +98,38 @@ runCoverage = (importCoverageDump, exportCoverageDump, exportLcovonly) ->
             else
                 onSuccess();
 
+    window.exportHtmlReport = (onSuccess) ->
+        Package['meteor']['Meteor'].exportCoverage 'html', (err) ->
+            if err
+                window.callPhantom
+                    err: "Failed to save html report"
+            else
+                onSuccess();
+
+    window.exportJsonReport = (onSuccess) ->
+        Package['meteor']['Meteor'].exportCoverage 'json', (err) ->
+            if err
+                window.callPhantom
+                    err: "Failed to save json report"
+            else
+                onSuccess();
+
+    window.exportTeamcityReport = (onSuccess) ->
+        Package['meteor']['Meteor'].exportCoverage 'teamcity', (err) ->
+            if err
+                window.callPhantom
+                    err: "Failed to save teamcity report"
+            else
+                onSuccess();
+
+    window.exportJsonSummary = (onSuccess) ->
+        Package['meteor']['Meteor'].exportCoverage 'json_summary', (err) ->
+            if err
+                window.callPhantom
+                    err: "Failed to save coverage dump"
+            else
+                onSuccess();
+
     window.importCoverageDump = (onSuccess) ->
         Package['meteor']['Meteor'].importCoverage (err) ->
             if err
@@ -103,19 +139,40 @@ runCoverage = (importCoverageDump, exportCoverageDump, exportLcovonly) ->
                 onSuccess();
 
     ## Execute desired tasks
-
     window.assertCoverageEnabled(->
         window.saveClientSideCoverage(->
             stepFurtherImportCoverageDump = ->
                 stepFurtherExportCoverageDump = ->
+                    stepFurtherExportLcovOnly = ->
+                        stepFurtherExportHtml = ->
+                            stepFurtherExportJson = ->
+                                stepFurtherExportTeamcity = ->
+                                    if exportJsonSummary
+                                        window.exportJsonSummary(->
+                                            window.callPhantom
+                                                success: "true"
+                                        );
+                                    else
+                                        window.callPhantom
+                                            success: "true"
+                                if exportTeamcity
+                                    window.exportTeamcityReport stepFurtherExportTeamcity
+                                else
+                                    stepFurtherExportTeamcity();
+                            if exportJson
+                                window.exportJsonReport stepFurtherExportJson
+                            else
+                                stepFurtherExportJson();
+
+                        if exportHtml
+                            window.exportHtmlReport stepFurtherExportHtml
+                        else
+                            stepFurtherExportHtml();
+
                     if exportLcovonly
-                        window.exportLcovonly(->
-                            window.callPhantom
-                                success: "true"
-                        );
+                        window.exportLcovonlyReport stepFurtherExportLcovOnly
                     else
-                        window.callPhantom
-                            success: "true"
+                        stepFurtherExportLcovOnly();
 
                 if exportCoverageDump
                     window.exportCoverageDump stepFurtherExportCoverageDump
