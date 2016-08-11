@@ -88,13 +88,19 @@ runCoverage = (importCoverageDump) ->
 
 
     window.exportReport = (onSuccess) ->
-        Package['meteor']['Meteor'].exportCoverage 'json', (err) ->
+        Package['meteor']['Meteor'].exportCoverage 'coverage', (err) ->
             if err
                 console.log("Errors: ", err)
                 window.callPhantom
-                    err: "Failed to save lcovonly coverage"
+                    err: "Failed to save coverage"
             else
-                onSuccess();
+              Package['meteor']['Meteor'].exportCoverage 'lcovonly', (err) ->
+                  if err
+                      console.log("Errors: ", err)
+                      window.callPhantom
+                          err: "Failed to save lcovonly coverage"
+                  else
+                      onSuccess();
 
 
     ## Execute desired tasks
