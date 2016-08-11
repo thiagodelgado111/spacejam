@@ -21,7 +21,7 @@ class CLI
     "test" : "testApp"
     "test-packages" : "testPackages"
   }
-  
+
   options: null
 
   spacejam: null
@@ -79,8 +79,9 @@ class CLI
       if Spacejam.DONE_MESSAGE[code]?
         exitMsg = "spacejam: #{Spacejam.DONE_MESSAGE[code]}. Exiting."
       else
+        log.info exitMsg
         exitMsg = "spacejam: Unknown error with exit code '#{code}'. Exiting."
-      log.error exitMsg
+
       process.exit code
 
     try
